@@ -37,11 +37,11 @@ class NotesController < ApplicationController
       render json: {url: notes_url + @note.id.to_s}
     elsif request.content_type =~ /form/
       @note = Note.new({content: params[:content]})
-    end
-    if @note.save
-        format.html { render"info", locals:{url:"https://privnotelikeapp.herokuapp.com/notes/" + @note.id.to_s} }
-    else
-       format.html { render :new }
+      if @note.save
+        redirect_to notes_url + @note.id.to_s
+      else
+        render 'index'
+      end
     end
   end
 
