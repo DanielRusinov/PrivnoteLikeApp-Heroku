@@ -24,16 +24,19 @@ class NotesController < ApplicationController
   # POST /notes
   # POST /notes.json
   def create
-    @note = Note.new(note_params)
-
-    respond_to do |format|
-      if @note.save
-        format.html { render"info", locals:{url:"https://privnotelikeapp.herokuapp.com/notes/" + @note.id.to_s} }
-        format.json { render :show, status: :created, location: @note }
-      else
-        format.html { render :new }
-        format.json { render json: @note.errors, status: :unprocessable_entity }
-      end
+    if request.content_type =~ /xml/
+      params[:message] = Hash.from_xml(request.body.read)["message"]
+      note = Note.new(content: params[:message])
+      render xml:
+      '<?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>' +
+      '<url>' +
+        notes_url + note.slug + "/info" +
+      '</url>'
+    elsif request.content_type =~ /json/
+      note = Note.new(content: params[:message])
+      render json: {url: notes_url + note.slug + '/info'}
+    elsif request.content_type =~ /form/
+      @note = Note.new({content: params[:content]})
     end
   end
 
