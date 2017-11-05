@@ -38,6 +38,11 @@ class NotesController < ApplicationController
     elsif request.content_type =~ /form/
       @note = Note.new({content: params[:content]})
     end
+    if @note.save
+        format.html { render"info", locals:{url:"https://privnotelikeapp.herokuapp.com/notes/" + @note.id.to_s} }
+    else
+       format.html { render :new }
+    end
   end
 
   # PATCH/PUT /notes/1
