@@ -34,7 +34,7 @@ class NotesController < ApplicationController
       '</url>'
     elsif request.content_type =~ /json/
       note = Note.create(body: params[:message])
-      render json: {url: notes_url + "/" @note.id.to_s}
+      render json: {url: notes_url + "/" + @note.id.to_s}
     elsif request.content_type =~ /form/
       @note = Note.new(body: params[:content])
       if @note.save
