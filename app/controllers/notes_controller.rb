@@ -30,11 +30,11 @@ class NotesController < ApplicationController
       render xml:
       '<?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>' +
       '<url>' +
-        notes_url + "/" + @note.id.to_s +
+        notes_url + "/" + note.id.to_s +
       '</url>'
     elsif request.content_type =~ /json/
       note = Note.new(body: params[:message])
-      render json: {url: notes_url + "/" + @note.id.to_s}
+      render json: {url: notes_url + "/" + note.id.to_s}
     elsif request.content_type =~ /form/
       @note = Note.new(body: params[:content])
       if @note.save
