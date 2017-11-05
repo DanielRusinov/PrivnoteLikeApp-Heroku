@@ -26,19 +26,19 @@ class NotesController < ApplicationController
   def create
     if request.content_type =~ /xml/
       params[:message] = Hash.from_xml(request.body.read)["message"]
-      note = Note.new(content: params[:message])
+      note = Note.new(body: params[:message])
       render xml:
       '<?xml version = "1.0" encoding = "UTF-8" standalone = "yes"?>' +
       '<url>' +
         notes_url + note.slug + "/info" +
       '</url>'
     elsif request.content_type =~ /json/
-      note = Note.create(body: params[:message])
-      render json: {url: notes_url + @note.id.to_s}
+      note = Note.create(body: params[:/message])
+      render json: {url: notes_url + '?' @note.id.to_s}
     elsif request.content_type =~ /form/
       @note = Note.new({body: params[:content]})
       if @note.save
-        redirect_to notes_url + @note.id.to_s
+        redirect_to notes_url + '/' + @note.id.to_s
       else
         render 'index'
       end
